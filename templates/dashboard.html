@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>My Profile</h3>
+<div id="profile" class="card p-3 mb-4"></div>
+
+<h3>Attendance</h3>
+<div class="mb-4">
+    <button class="btn btn-success me-2" onclick="checkIn()">Check In</button>
+    <button class="btn btn-warning" onclick="checkOut()">Check Out</button>
+    <div id="attendance-result" class="mt-2"></div>
+</div>
+
+<h3>Apply for Leave</h3>
+<div class="card p-3 mb-4" style="max-width: 500px;">
+    <input id="start_date" type="date" class="form-control mb-2">
+    <input id="end_date" type="date" class="form-control mb-2">
+    <textarea id="reason" class="form-control mb-2" placeholder="Reason"></textarea>
+    <button class="btn btn-primary" onclick="applyLeave()">Submit Leave Request</button>
+</div>
+
+<div id="employees-section" class="d-none">
+    <h3>Employees (HR/Admin Only)</h3>
+    <table class="table table-bordered">
+        <thead><tr><th>Employee ID</th><th>Username</th><th>Department</th><th>Status</th></tr></thead>
+        <tbody id="employees-table"></tbody>
+    </table>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+    if (!getToken()) window.location.href = "/login/";
+
+    async function loadProfile() {
+        const res = await apiRequest("/accounts/profile/");
+        const data = await res.json();
+        document.getElementById("profile").innerHTML = `
+            <p><strong>Username:</strong> ${data.username}</p>
+            <p><strong>Email:</strong> ${data.email}</p>
+            <p><strong>Role:</strong> ${data.role}</p>
+        `;
+        if (data.role === "HR" || data.role === "ADMIN") {
+            document.getElementById("employees-section").classList.remove("d-none");
+            loadEmployees();
+        }
+    }
+
+    async function loadEmployees() {
+        const res = await apiRequest("/employees/");
+        const data = await res.json();
+        const rows = data.map(e => `
+            <tr><td>${e.employee_id}</td><td>${e.user_detail.username}</td>
+            <td>${e.department_name || '-'}</td><td>${e.status}</td></tr>
+        `).join("");
+        document.getElementById("employees-table").innerHTML = rows;
+    }
+
+    async function checkIn() {
+        const res = await apiRequest("/attendance/check-in/", "POST");
+        const data = await res.json();
+        document.getElementById("attendance-result").innerText = "Checked in at " + data.check_in;
+    }
+
+    async function checkOut() {
+        const res = await apiRequest("/attendance/check-out/", "POST");
+        const data = await res.json();
+        document.getElementById("attendance-result").innerText = "Checked out at " + data.check_out;
+    }
+
+    async function applyLeave() {
+        const payload = {
+            start_date: document.getElementById("start_date").value,
+            end_date: document.getElementById("end_date").value,
+            reason: document.getElementById("reason").value,
+        };
+        const res = await apiRequest("/attendance/leave/", "POST", payload);
+        if (res.ok) alert("Leave request submitted!");
+        else alert("Error submitting leave request");
+    }
+
+    loadProfile();
+</script>
+{% endblock %}
