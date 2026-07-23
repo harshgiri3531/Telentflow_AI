@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚀 TalentFlow AI
+#  TalentFlow AI
 ### Enterprise HR & Employee Lifecycle Management Platform
 
 A modern Human Resource Management System (HRMS) built with **Django**, **Django REST Framework**, **MySQL**, and **JWT Authentication**, designed to streamline the complete employee lifecycle for organizations.
