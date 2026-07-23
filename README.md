@@ -227,24 +227,6 @@ Examples:
 
 ---
 
-# 📸 Screenshots
-
-> Add project screenshots here.
-
-```
-Home Dashboard
-
-Employee Management
-
-Attendance Module
-
-Leave Management
-
-Performance Dashboard
-```
-
----
-
 # 👨‍💻 Author
 
 **Harsh Giri**
@@ -259,7 +241,6 @@ https://github.com/harshgiri3531
 
 LinkedIn
 
-(Add your LinkedIn Profile)
 
 ---
 
