@@ -18,6 +18,14 @@
     <button class="btn btn-primary" onclick="applyLeave()">Submit Leave Request</button>
 </div>
 
+<h3>My Leave Requests</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr><th>Start Date</th><th>End Date</th><th>Reason</th><th>Status</th></tr>
+    </thead>
+    <tbody id="leave-table"></tbody>
+</table>
+
 <div id="employees-section" class="d-none">
     <h3>Employees (HR/Admin Only)</h3>
     <table class="table table-bordered">
@@ -74,10 +82,34 @@
             reason: document.getElementById("reason").value,
         };
         const res = await apiRequest("/attendance/leave/", "POST", payload);
-        if (res.ok) alert("Leave request submitted!");
-        else alert("Error submitting leave request");
+        if (res.ok) {
+            alert("Leave request submitted!");
+            loadLeaveRequests();
+        } else {
+            alert("Error submitting leave request");
+        }
+    }
+
+    async function loadLeaveRequests() {
+        const res = await apiRequest("/attendance/leave/");
+        const data = await res.json();
+        const rows = data.map(l => {
+            let badgeClass = "bg-warning";
+            if (l.status === "APPROVED") badgeClass = "bg-success";
+            if (l.status === "REJECTED") badgeClass = "bg-danger";
+            return `
+                <tr>
+                    <td>${l.start_date}</td>
+                    <td>${l.end_date}</td>
+                    <td>${l.reason}</td>
+                    <td><span class="badge ${badgeClass}">${l.status}</span></td>
+                </tr>
+            `;
+        }).join("");
+        document.getElementById("leave-table").innerHTML = rows;
     }
 
     loadProfile();
+    loadLeaveRequests();
 </script>
 {% endblock %}
