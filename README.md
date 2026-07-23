@@ -1,109 +1,274 @@
-# TalentFlow AI - Enterprise HR & Employee Lifecycle Management Platform
+<div align="center">
 
-TalentFlow AI is a modern HR Management Platform built using Django and Django REST Framework. It provides secure employee lifecycle management with JWT Authentication, Role-Based Access Control (RBAC), attendance management, leave management, performance tracking, and REST APIs.
+# 🚀 TalentFlow AI
+### Enterprise HR & Employee Lifecycle Management Platform
 
----
+A modern Human Resource Management System (HRMS) built with **Django**, **Django REST Framework**, **MySQL**, and **JWT Authentication**, designed to streamline the complete employee lifecycle for organizations.
 
-## Features
+![Python](https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python)
+![Django](https://img.shields.io/badge/Django-5.x-green?style=for-the-badge&logo=django)
+![DRF](https://img.shields.io/badge/Django_REST_Framework-red?style=for-the-badge)
+![MySQL](https://img.shields.io/badge/MySQL-blue?style=for-the-badge&logo=mysql)
+![JWT](https://img.shields.io/badge/JWT-Authentication-orange?style=for-the-badge)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple?style=for-the-badge&logo=bootstrap)
 
-- JWT Authentication
-- Role-Based Access Control (Admin, HR, Manager, Employee)
-- Employee Management
-- Department Management
-- Attendance Tracking
-- Leave Management
-- Performance Reviews
-- REST APIs
-- Secure Authentication
-- Responsive UI
+</div>
 
 ---
 
-## Tech Stack
+# 📖 Overview
 
-### Backend
+TalentFlow AI is a scalable Enterprise HR platform developed using Django and Django REST Framework. The system enables organizations to efficiently manage employees, attendance, departments, leave requests, performance reviews, and secure authentication through JWT-based APIs.
+
+The project follows a modular architecture and industry-standard backend practices suitable for enterprise applications.
+
+---
+
+# ✨ Features
+
+✅ JWT Authentication
+
+✅ Role-Based Access Control (Admin, HR, Manager, Employee)
+
+✅ Employee Management
+
+✅ Department Management
+
+✅ Attendance Tracking
+
+✅ Leave Management
+
+✅ Performance Reviews
+
+✅ REST APIs
+
+✅ Secure Login System
+
+✅ Responsive Dashboard
+
+✅ Modular Django Apps
+
+---
+
+# 🏗️ Architecture
+
+```
+                Client (Web / Mobile)
+                        │
+                        ▼
+             Django REST Framework APIs
+                        │
+        JWT Authentication & Authorization
+                        │
+        ┌───────────────┼───────────────┐
+        ▼               ▼               ▼
+ Employees       Attendance       Performance
+        ▼               ▼               ▼
+          Department Management
+                        │
+                        ▼
+                     MySQL Database
+```
+
+---
+
+# 🛠️ Tech Stack
+
+## Backend
+
+- Python
 - Django
 - Django REST Framework
-- Python
 
-### Database
+## Database
+
 - MySQL
 
-### Authentication
+## Authentication
+
 - JWT Authentication
 
-### Frontend
-- HTML
-- CSS
+## Frontend
+
+- HTML5
+- CSS3
 - Bootstrap
 - JavaScript
 
-### Version Control
+## Tools
+
 - Git
 - GitHub
+- Postman
+- VS Code
 
 ---
 
-## Project Structure
+# 📂 Project Structure
 
 ```
-TalentFlow_AI/
+TalentFlow_AI
 │
-├── apps/
-│   ├── accounts/
-│   ├── employees/
-│   ├── attendance/
-│   ├── organizations/
-│   ├── performance/
-│   └── notifications/
+├── apps
+│   ├── accounts
+│   ├── employees
+│   ├── attendance
+│   ├── organizations
+│   ├── performance
+│   └── notifications
 │
-├── config/
-├── templates/
-├── static/
-├── requirements/
+├── config
+├── templates
+├── static
+├── requirements
 ├── manage.py
 └── README.md
 ```
 
 ---
 
-## Installation
+# 🔐 Authentication
+
+The application uses **JWT (JSON Web Token)** Authentication.
+
+After successful login:
+
+- Access Token
+- Refresh Token
+
+are generated.
+
+Protected APIs require:
+
+```
+Authorization: Bearer <Access Token>
+```
+
+---
+
+# 🚀 Installation
 
 ```bash
 git clone https://github.com/harshgiri3531/Telentflow_AI.git
+```
 
+```bash
 cd Telentflow_AI
+```
 
+Create Virtual Environment
+
+```bash
 python -m venv venv
+```
 
+Activate Virtual Environment
+
+Windows
+
+```bash
 venv\Scripts\activate
+```
 
+Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
+Run Migrations
+
+```bash
 python manage.py migrate
+```
 
+Start Server
+
+```bash
 python manage.py runserver
 ```
 
 ---
 
-## Future Enhancements
+# 📡 API Testing
 
-- AI Resume Screening
-- Payroll Module
-- Email Notifications
-- AI Performance Analytics
-- Recruitment Module
-- Employee Chatbot
-- Face Attendance
-- Multi Organization Support
+All REST APIs were tested using **Postman**.
+
+Examples:
+
+- Login API
+- Employee CRUD APIs
+- Attendance APIs
+- Leave APIs
+- Performance APIs
 
 ---
 
-## Author
+# 🔒 Security
 
-Harsh Giri
+- JWT Authentication
+- Password Hashing
+- Role-Based Access Control
+- Protected API Endpoints
+- Authentication Middleware
 
-B.Tech CSE (AI)
+---
+
+# 🚀 Future Enhancements
+
+- AI Resume Screening
+- Payroll Management
+- Recruitment Module
+- AI Employee Performance Prediction
+- Face Recognition Attendance
+- Email Notifications
+- HR Analytics Dashboard
+- AI Chatbot (RAG + LangChain)
+
+---
+
+# 📸 Screenshots
+
+> Add project screenshots here.
+
+```
+Home Dashboard
+
+Employee Management
+
+Attendance Module
+
+Leave Management
+
+Performance Dashboard
+```
+
+---
+
+# 👨‍💻 Author
+
+**Harsh Giri**
+
+B.Tech Computer Science & Engineering (Artificial Intelligence)
 
 Meerut Institute of Engineering & Technology
+
+GitHub
+
+https://github.com/harshgiri3531
+
+LinkedIn
+
+(Add your LinkedIn Profile)
+
+---
+
+# ⭐ Support
+
+If you found this project useful,
+
+⭐ Star this repository
+
+🍴 Fork it
+
+🤝 Contributions are welcome.
