@@ -5,6 +5,7 @@ from django.utils import timezone
 from .models import Attendance, LeaveRequest
 from .serializers import AttendanceSerializer, LeaveRequestSerializer
 from apps.accounts.permissions import IsHRorAdmin
+from apps.notifications.models import Notification
 
 
 class CheckInView(APIView):
@@ -55,4 +56,8 @@ class LeaveApprovalView(generics.UpdateAPIView):
     permission_classes = [IsHRorAdmin]
 
     def perform_update(self, serializer):
-        serializer.save(approved_by=self.request.user.employee_profile)
+        leave = serializer.save(approved_by=self.request.user.employee_profile)
+        Notification.objects.create(
+            recipient=leave.employee.user,
+            message=f"Your leave request ({leave.start_date} to {leave.end_date}) has been {leave.status.lower()}."
+        )

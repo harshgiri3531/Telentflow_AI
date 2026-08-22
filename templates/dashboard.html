@@ -1,40 +1,109 @@
 {% extends "base.html" %}
 {% block content %}
-<h3>My Profile</h3>
-<div id="profile" class="card p-3 mb-4"></div>
+<style>
+    .section-card {
+        background: white;
+        border-radius: 14px;
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        margin-bottom: 24px;
+        border: 1px solid #eef0f5;
+    }
+    .section-title {
+        font-weight: 700;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #1e3c72;
+    }
+    .section-title i { font-size: 20px; }
+    .stat-card {
+        border-radius: 14px;
+        padding: 20px;
+        color: white;
+        margin-bottom: 24px;
+    }
+    .stat-card h2 { font-weight: 700; margin: 0; }
+    .stat-card p { margin: 0; opacity: 0.9; font-size: 14px; }
+    .bg-blue { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+    .bg-green { background: linear-gradient(135deg, #11998e, #38ef7d); }
+    .bg-orange { background: linear-gradient(135deg, #f7971e, #ffd200); color: #1e1e1e !important; }
+    table.custom-table thead { background: #f4f6fb; }
+    table.custom-table th { border: none !important; font-size: 13px; text-transform: uppercase; color: #6c757d; }
+    table.custom-table td { border: none !important; border-bottom: 1px solid #f0f0f0 !important; vertical-align: middle; }
+</style>
 
-<h3>Attendance</h3>
-<div class="mb-4">
-    <button class="btn btn-success me-2" onclick="checkIn()">Check In</button>
-    <button class="btn btn-warning" onclick="checkOut()">Check Out</button>
-    <div id="attendance-result" class="mt-2"></div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="stat-card bg-blue">
+            <p>Logged in as</p>
+            <h2 id="stat-role">—</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card bg-green">
+            <p>Pending Leave Requests</p>
+            <h2 id="stat-leaves">0</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card bg-orange">
+            <p>Active Goals</p>
+            <h2 id="stat-goals">0</h2>
+        </div>
+    </div>
 </div>
 
-<h3>Apply for Leave</h3>
-<div class="card p-3 mb-4" style="max-width: 500px;">
-    <input id="start_date" type="date" class="form-control mb-2">
-    <input id="end_date" type="date" class="form-control mb-2">
-    <textarea id="reason" class="form-control mb-2" placeholder="Reason"></textarea>
-    <button class="btn btn-primary" onclick="applyLeave()">Submit Leave Request</button>
+<div class="section-card">
+    <div class="section-title"><i class="bi bi-person-circle"></i> My Profile</div>
+    <div id="profile"></div>
 </div>
 
-<h3>My Leave Requests</h3>
-<table class="table table-bordered">
-    <thead>
-        <tr><th>Start Date</th><th>End Date</th><th>Reason</th><th>Status</th></tr>
-    </thead>
-    <tbody id="leave-table"></tbody>
-</table>
+<div class="section-card">
+    <div class="section-title"><i class="bi bi-clock-history"></i> Attendance</div>
+    <button class="btn btn-success me-2" onclick="checkIn()"><i class="bi bi-box-arrow-in-right"></i> Check In</button>
+    <button class="btn btn-warning" onclick="checkOut()"><i class="bi bi-box-arrow-right"></i> Check Out</button>
+    <div id="attendance-result" class="mt-2 text-muted small"></div>
+</div>
 
-<div id="employees-section" class="d-none">
-    <h3>Employees (HR/Admin Only)</h3>
-    <table class="table table-bordered">
-        <thead><tr><th>Employee ID</th><th>Username</th><th>Department</th><th>Status</th></tr></thead>
+<div class="section-card">
+    <div class="section-title"><i class="bi bi-calendar-check"></i> Apply for Leave</div>
+    <div class="row">
+        <div class="col-md-3"><input id="start_date" type="date" class="form-control mb-2"></div>
+        <div class="col-md-3"><input id="end_date" type="date" class="form-control mb-2"></div>
+        <div class="col-md-4"><input id="reason" class="form-control mb-2" placeholder="Reason"></div>
+        <div class="col-md-2"><button class="btn btn-primary w-100" onclick="applyLeave()">Submit</button></div>
+    </div>
+    <table class="table custom-table mt-3">
+        <thead><tr><th>Start</th><th>End</th><th>Reason</th><th>Status</th></tr></thead>
+        <tbody id="leave-table"></tbody>
+    </table>
+</div>
+
+<div id="employees-section" class="section-card d-none">
+    <div class="section-title"><i class="bi bi-people"></i> Employees (HR/Admin Only)</div>
+    <table class="table custom-table">
+        <thead><tr><th>ID</th><th>Username</th><th>Department</th><th>Status</th></tr></thead>
         <tbody id="employees-table"></tbody>
     </table>
 </div>
 
+<div class="section-card">
+    <div class="section-title"><i class="bi bi-flag"></i> My Goals</div>
+    <div class="row">
+        <div class="col-md-4"><input id="goal_title" class="form-control mb-2" placeholder="Goal title"></div>
+        <div class="col-md-3"><input id="goal_due_date" type="date" class="form-control mb-2"></div>
+        <div class="col-md-4"><input id="goal_description" class="form-control mb-2" placeholder="Description"></div>
+        <div class="col-md-1"><button class="btn btn-primary w-100" onclick="createGoal()"><i class="bi bi-plus"></i></button></div>
+    </div>
+    <table class="table custom-table mt-3">
+        <thead><tr><th>Title</th><th>Due Date</th><th>Status</th></tr></thead>
+        <tbody id="goals-table"></tbody>
+    </table>
+</div>
 {% endblock %}
+
 {% block scripts %}
 <script>
     if (!getToken()) window.location.href = "/login/";
@@ -43,10 +112,11 @@
         const res = await apiRequest("/accounts/profile/");
         const data = await res.json();
         document.getElementById("profile").innerHTML = `
-            <p><strong>Username:</strong> ${data.username}</p>
-            <p><strong>Email:</strong> ${data.email}</p>
-            <p><strong>Role:</strong> ${data.role}</p>
+            <p class="mb-1"><strong>Username:</strong> ${data.username}</p>
+            <p class="mb-1"><strong>Email:</strong> ${data.email || '-'}</p>
+            <p class="mb-0"><strong>Role:</strong> ${data.role}</p>
         `;
+        document.getElementById("stat-role").innerText = data.role;
         if (data.role === "HR" || data.role === "ADMIN") {
             document.getElementById("employees-section").classList.remove("d-none");
             loadEmployees();
@@ -56,11 +126,10 @@
     async function loadEmployees() {
         const res = await apiRequest("/employees/");
         const data = await res.json();
-        const rows = data.map(e => `
+        document.getElementById("employees-table").innerHTML = data.map(e => `
             <tr><td>${e.employee_id}</td><td>${e.user_detail.username}</td>
             <td>${e.department_name || '-'}</td><td>${e.status}</td></tr>
         `).join("");
-        document.getElementById("employees-table").innerHTML = rows;
     }
 
     async function checkIn() {
@@ -75,6 +144,14 @@
         document.getElementById("attendance-result").innerText = "Checked out at " + data.check_out;
     }
 
+    function statusBadge(status) {
+        let cls = "bg-warning";
+        if (["APPROVED", "COMPLETED"].includes(status)) cls = "bg-success";
+        if (["REJECTED", "MISSED"].includes(status)) cls = "bg-danger";
+        if (status === "IN_PROGRESS") cls = "bg-info";
+        return `<span class="badge ${cls}">${status}</span>`;
+    }
+
     async function applyLeave() {
         const payload = {
             start_date: document.getElementById("start_date").value,
@@ -82,34 +159,45 @@
             reason: document.getElementById("reason").value,
         };
         const res = await apiRequest("/attendance/leave/", "POST", payload);
-        if (res.ok) {
-            alert("Leave request submitted!");
-            loadLeaveRequests();
-        } else {
-            alert("Error submitting leave request");
-        }
+        if (res.ok) { loadLeaveRequests(); }
+        else alert("Error submitting leave request");
     }
 
     async function loadLeaveRequests() {
         const res = await apiRequest("/attendance/leave/");
         const data = await res.json();
-        const rows = data.map(l => {
-            let badgeClass = "bg-warning";
-            if (l.status === "APPROVED") badgeClass = "bg-success";
-            if (l.status === "REJECTED") badgeClass = "bg-danger";
-            return `
-                <tr>
-                    <td>${l.start_date}</td>
-                    <td>${l.end_date}</td>
-                    <td>${l.reason}</td>
-                    <td><span class="badge ${badgeClass}">${l.status}</span></td>
-                </tr>
-            `;
-        }).join("");
-        document.getElementById("leave-table").innerHTML = rows;
+        document.getElementById("leave-table").innerHTML = data.map(l => `
+            <tr><td>${l.start_date}</td><td>${l.end_date}</td><td>${l.reason}</td><td>${statusBadge(l.status)}</td></tr>
+        `).join("");
+        document.getElementById("stat-leaves").innerText = data.filter(l => l.status === "PENDING").length;
+    }
+
+    async function createGoal() {
+        const payload = {
+            title: document.getElementById("goal_title").value,
+            description: document.getElementById("goal_description").value,
+            due_date: document.getElementById("goal_due_date").value,
+        };
+        const res = await apiRequest("/performance/goals/", "POST", payload);
+        if (res.ok) {
+            loadGoals();
+            document.getElementById("goal_title").value = "";
+            document.getElementById("goal_description").value = "";
+            document.getElementById("goal_due_date").value = "";
+        } else alert("Error creating goal");
+    }
+
+    async function loadGoals() {
+        const res = await apiRequest("/performance/goals/");
+        const data = await res.json();
+        document.getElementById("goals-table").innerHTML = data.map(g => `
+            <tr><td>${g.title}</td><td>${g.due_date}</td><td>${statusBadge(g.status)}</td></tr>
+        `).join("");
+        document.getElementById("stat-goals").innerText = data.filter(g => g.status === "IN_PROGRESS").length;
     }
 
     loadProfile();
     loadLeaveRequests();
+    loadGoals();
 </script>
 {% endblock %}

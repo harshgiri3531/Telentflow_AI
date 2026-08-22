@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TalentFlow AI — Enterprise HR Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: 
+                linear-gradient(135deg, rgba(30,60,114,0.85), rgba(42,82,152,0.85)),
+                url('{% static "images/hero-bg.jpg" %}') center/cover no-repeat;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+        /* Floating blurred circles for background depth */
+        body::before, body::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+        }
+        body::before {
+            width: 350px; height: 350px;
+            background: rgba(255, 255, 255, 0.15);
+            top: -100px; left: -100px;
+        }
+        body::after {
+            width: 300px; height: 300px;
+            background: rgba(56, 239, 125, 0.2);
+            bottom: -80px; right: -80px;
+        }
+        .hero-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 60px 50px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            position: relative;
+            z-index: 1;
+        }
+        .icon-circle {
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .icon-circle i {
+            font-size: 40px;
+            color: white;
+        }
+        .hero-card h1, .hero-card p {
+            color: white;
+        }
+        .hero-card .text-muted {
+            color: rgba(255,255,255,0.75) !important;
+        }
+        .btn-glass {
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            transition: all 0.25s ease;
+        }
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-glass-outline {
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin: 8px;
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            color: white;
+            transition: all 0.25s ease;
+        }
+        .btn-glass-outline:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-card">
+        <div class="icon-circle">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <h1 class="fw-bold mb-2">TalentFlow AI</h1>
+        <p class="text-muted mb-4">Enterprise HR & Employee Lifecycle Management Platform</p>
+
+        <div class="d-flex justify-content-center flex-wrap">
+            <a href="/login/" class="btn btn-glass">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+            <a href="/register/" class="btn btn-glass-outline">
+                <i class="bi bi-person-plus"></i> Register
+            </a>
+        </div>
+
+        <p class="text-muted mt-4 small">Manage employees, attendance, leaves & performance — all in one place.</p>
+    </div>
+</body>
+</html>

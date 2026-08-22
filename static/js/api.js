@@ -32,3 +32,20 @@ async function apiRequest(endpoint, method = "GET", body = null) {
     }
     return res;
 }
+
+async function loadNotifications() {
+    const res = await apiRequest("/notifications/");
+    if (!res) return;
+    const data = await res.json();
+    const badge = document.getElementById("notif-badge");
+    if (data.length > 0) {
+        badge.textContent = data.length;
+        badge.classList.remove("d-none");
+    }
+    const list = document.getElementById("notif-list");
+    list.innerHTML = data.map(n => `<li class="list-group-item">${n.message}</li>`).join("") || "<li class='list-group-item text-muted'>No notifications</li>";
+}
+
+function toggleNotifications() {
+    document.getElementById("notif-dropdown").classList.toggle("d-none");
+}

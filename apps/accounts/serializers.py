@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import User
+from apps.notifications.models import Notification
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -26,17 +27,21 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-      validated_data.pop('password2')
-      user = User.objects.create_user(
-        username=validated_data['username'],
-        email=validated_data.get('email', ''),
-        password=validated_data['password'],
-        first_name=validated_data.get('first_name', ''),
-        last_name=validated_data.get('last_name', ''),
-        phone_number=validated_data.get('phone_number', ''),
-        role=User.Role.EMPLOYEE,
-    )
-      return user
+        validated_data.pop('password2')
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),
+            password=validated_data['password'],
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            phone_number=validated_data.get('phone_number', ''),
+            role=User.Role.EMPLOYEE,
+        )
+        Notification.objects.create(
+            recipient=user,
+            message=f"Welcome to TalentFlow AI, {user.first_name or user.username}! Your account has been created successfully."
+        )
+        return user
 
 
 class UserSerializer(serializers.ModelSerializer):
