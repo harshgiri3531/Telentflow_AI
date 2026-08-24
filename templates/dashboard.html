@@ -83,6 +83,25 @@
 
 <div id="employees-section" class="section-card d-none">
     <div class="section-title"><i class="bi bi-people"></i> Employees (HR/Admin Only)</div>
+
+    <div class="mb-4">
+        <h6 class="text-muted">Add New Employee</h6>
+        <div class="row">
+            <div class="col-md-3">
+                <select id="new_emp_user" class="form-select mb-2"></select>
+            </div>
+            <div class="col-md-2">
+                <input id="new_emp_id" class="form-control mb-2" placeholder="Employee ID">
+            </div>
+            <div class="col-md-3">
+                <input id="new_emp_doj" type="date" class="form-control mb-2">
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100" onclick="createEmployee()">Add</button>
+            </div>
+        </div>
+    </div>
+
     <table class="table custom-table">
         <thead><tr><th>ID</th><th>Username</th><th>Department</th><th>Status</th></tr></thead>
         <tbody id="employees-table"></tbody>
@@ -120,6 +139,7 @@
         if (data.role === "HR" || data.role === "ADMIN") {
             document.getElementById("employees-section").classList.remove("d-none");
             loadEmployees();
+            loadUsersDropdown();
         }
     }
 
@@ -130,6 +150,31 @@
             <tr><td>${e.employee_id}</td><td>${e.user_detail.username}</td>
             <td>${e.department_name || '-'}</td><td>${e.status}</td></tr>
         `).join("");
+    }
+
+    async function loadUsersDropdown() {
+        const res = await apiRequest("/accounts/users/");
+        const data = await res.json();
+        const select = document.getElementById("new_emp_user");
+        select.innerHTML = data.map(u => `<option value="${u.id}">${u.username} (${u.role})</option>`).join("");
+    }
+
+    async function createEmployee() {
+        const payload = {
+            user: document.getElementById("new_emp_user").value,
+            employee_id: document.getElementById("new_emp_id").value,
+            date_of_joining: document.getElementById("new_emp_doj").value,
+            status: "ACTIVE",
+        };
+        const res = await apiRequest("/employees/", "POST", payload);
+        if (res.ok) {
+            loadEmployees();
+            document.getElementById("new_emp_id").value = "";
+            document.getElementById("new_emp_doj").value = "";
+        } else {
+            const err = await res.json();
+            alert("Error: " + JSON.stringify(err));
+        }
     }
 
     async function checkIn() {
