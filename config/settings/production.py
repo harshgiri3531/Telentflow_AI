@@ -2,7 +2,7 @@ from .base import *
 from decouple import config
 import dj_database_url
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 
