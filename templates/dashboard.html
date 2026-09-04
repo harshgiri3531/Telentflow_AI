@@ -65,14 +65,14 @@
     <div id="profile"></div>
 </div>
 
-<div class="section-card">
+<div id="attendance-section" class="section-card">
     <div class="section-title"><i class="bi bi-clock-history"></i> Attendance</div>
     <button class="btn btn-success me-2" onclick="checkIn()"><i class="bi bi-box-arrow-in-right"></i> Check In</button>
     <button class="btn btn-warning" onclick="checkOut()"><i class="bi bi-box-arrow-right"></i> Check Out</button>
     <div id="attendance-result" class="mt-2 text-muted small"></div>
 </div>
 
-<div class="section-card">
+<div id="leave-section" class="section-card">
     <div class="section-title"><i class="bi bi-calendar-check"></i> Apply for Leave</div>
     <div class="row">
         <div class="col-md-3"><input id="start_date" type="date" class="form-control mb-2"></div>
@@ -121,7 +121,7 @@
     </div>
 </div>
 
-<div class="section-card">
+<div id="goals-section" class="section-card">
     <div class="section-title"><i class="bi bi-flag"></i> My Goals</div>
     <div class="row">
         <div class="col-md-4"><input id="goal_title" class="form-control mb-2" placeholder="Goal title"></div>
@@ -135,7 +135,7 @@
     </table>
 </div>
 
-<div class="section-card">
+<div id="reviews-section-my" class="section-card">
     <div class="section-title"><i class="bi bi-star-fill"></i> My Performance Reviews</div>
     <table class="table custom-table">
         <thead><tr><th>Rating</th><th>Feedback</th><th>Date</th></tr></thead>
