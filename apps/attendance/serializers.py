@@ -10,10 +10,13 @@ class AttendanceSerializer(serializers.ModelSerializer):
 
 
 class LeaveRequestSerializer(serializers.ModelSerializer):
+    employee_name = serializers.CharField(source='employee.user.username', read_only=True)
+    employee_code = serializers.CharField(source='employee.employee_id', read_only=True)
+
     class Meta:
         model = LeaveRequest
         fields = (
-            'id', 'employee', 'start_date', 'end_date',
-            'reason', 'status', 'approved_by', 'created_at',
+            'id', 'employee', 'employee_name', 'employee_code',
+            'start_date', 'end_date', 'reason', 'status', 'approved_by', 'created_at',
         )
         read_only_fields = ('employee', 'status', 'approved_by')

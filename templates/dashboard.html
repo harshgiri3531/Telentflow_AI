@@ -2,55 +2,60 @@
 {% block content %}
 <style>
     .section-card {
-        background: white;
-        border-radius: 14px;
-        padding: 24px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        margin-bottom: 24px;
-        border: 1px solid #eef0f5;
+        background: white; border-radius: 14px; padding: 24px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 24px; border: 1px solid #eef0f5;
     }
     .section-title {
-        font-weight: 700;
-        margin-bottom: 18px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #1e3c72;
+        font-weight: 700; margin-bottom: 18px; display: flex; align-items: center;
+        gap: 10px; color: #1e3c72;
     }
     .section-title i { font-size: 20px; }
-    .stat-card {
-        border-radius: 14px;
-        padding: 20px;
-        color: white;
-        margin-bottom: 24px;
-    }
+    .stat-card { border-radius: 14px; padding: 20px; color: white; margin-bottom: 24px; }
     .stat-card h2 { font-weight: 700; margin: 0; }
     .stat-card p { margin: 0; opacity: 0.9; font-size: 14px; }
     .bg-blue { background: linear-gradient(135deg, #1e3c72, #2a5298); }
     .bg-green { background: linear-gradient(135deg, #11998e, #38ef7d); }
     .bg-orange { background: linear-gradient(135deg, #f7971e, #ffd200); color: #1e1e1e !important; }
+    .bg-red { background: linear-gradient(135deg, #e63946, #ff6b6b); }
     table.custom-table thead { background: #f4f6fb; }
     table.custom-table th { border: none !important; font-size: 13px; text-transform: uppercase; color: #6c757d; }
     table.custom-table td { border: none !important; border-bottom: 1px solid #f0f0f0 !important; vertical-align: middle; }
+    .dept-row { margin-bottom: 16px; }
+    .dept-row .progress { height: 8px; border-radius: 4px; }
+    .request-item {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 12px 0; border-bottom: 1px solid #f0f0f0;
+    }
 </style>
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="stat-card bg-blue">
-            <p>Logged in as</p>
-            <h2 id="stat-role">—</h2>
+<div id="admin-overview" class="d-none">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-card bg-blue"><p>Total Workforce</p><h2 id="stat-total-employees">0</h2></div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-green"><p>Active Employees</p><h2 id="stat-active-employees">0</h2></div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-orange"><p>On Leave Today</p><h2 id="stat-on-leave">0</h2></div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-red"><p>Pending Approvals</p><h2 id="stat-pending">0</h2></div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="stat-card bg-green">
-            <p>Pending Leave Requests</p>
-            <h2 id="stat-leaves">0</h2>
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="section-card">
+                <div class="section-title"><i class="bi bi-diagram-3"></i> Department Headcount</div>
+                <div id="dept-breakdown"></div>
+            </div>
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="stat-card bg-orange">
-            <p>Active Goals</p>
-            <h2 id="stat-goals">0</h2>
+        <div class="col-md-5">
+            <div class="section-card">
+                <div class="section-title"><i class="bi bi-hourglass-split"></i> Pending Leave Requests</div>
+                <div id="pending-requests-list"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -83,25 +88,15 @@
 
 <div id="employees-section" class="section-card d-none">
     <div class="section-title"><i class="bi bi-people"></i> Employees (HR/Admin Only)</div>
-
     <div class="mb-4">
         <h6 class="text-muted">Add New Employee</h6>
         <div class="row">
-            <div class="col-md-3">
-                <select id="new_emp_user" class="form-select mb-2"></select>
-            </div>
-            <div class="col-md-2">
-                <input id="new_emp_id" class="form-control mb-2" placeholder="Employee ID">
-            </div>
-            <div class="col-md-3">
-                <input id="new_emp_doj" type="date" class="form-control mb-2">
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-primary w-100" onclick="createEmployee()">Add</button>
-            </div>
+            <div class="col-md-3"><select id="new_emp_user" class="form-select mb-2"></select></div>
+            <div class="col-md-2"><input id="new_emp_id" class="form-control mb-2" placeholder="Employee ID"></div>
+            <div class="col-md-3"><input id="new_emp_doj" type="date" class="form-control mb-2"></div>
+            <div class="col-md-2"><button class="btn btn-primary w-100" onclick="createEmployee()">Add</button></div>
         </div>
     </div>
-
     <table class="table custom-table">
         <thead><tr><th>ID</th><th>Username</th><th>Department</th><th>Status</th></tr></thead>
         <tbody id="employees-table"></tbody>
@@ -111,9 +106,7 @@
 <div id="reviews-section" class="section-card d-none">
     <div class="section-title"><i class="bi bi-star"></i> Performance Reviews (HR/Admin Only)</div>
     <div class="row">
-        <div class="col-md-4">
-            <select id="review_employee" class="form-select mb-2"></select>
-        </div>
+        <div class="col-md-4"><select id="review_employee" class="form-select mb-2"></select></div>
         <div class="col-md-2">
             <select id="review_rating" class="form-select mb-2">
                 <option value="5">5 - Excellent</option>
@@ -123,12 +116,8 @@
                 <option value="1">1 - Poor</option>
             </select>
         </div>
-        <div class="col-md-4">
-            <input id="review_feedback" class="form-control mb-2" placeholder="Feedback">
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-primary w-100" onclick="createReview()">Submit</button>
-        </div>
+        <div class="col-md-4"><input id="review_feedback" class="form-control mb-2" placeholder="Feedback"></div>
+        <div class="col-md-2"><button class="btn btn-primary w-100" onclick="createReview()">Submit</button></div>
     </div>
 </div>
 
@@ -167,13 +156,65 @@
             <p class="mb-1"><strong>Email:</strong> ${data.email || '-'}</p>
             <p class="mb-0"><strong>Role:</strong> ${data.role}</p>
         `;
-        document.getElementById("stat-role").innerText = data.role;
         if (data.role === "HR" || data.role === "ADMIN") {
+            document.getElementById("admin-overview").classList.remove("d-none");
             document.getElementById("employees-section").classList.remove("d-none");
+            document.getElementById("reviews-section").classList.remove("d-none");
             loadEmployees();
             loadUsersDropdown();
             loadReviewsDropdown();
+            loadAdminOverview();
         }
+    }
+
+    async function loadAdminOverview() {
+        const empRes = await apiRequest("/employees/");
+        const employees = await empRes.json();
+
+        document.getElementById("stat-total-employees").innerText = employees.length;
+        document.getElementById("stat-active-employees").innerText = employees.filter(e => e.status === "ACTIVE").length;
+
+        const deptCounts = {};
+        employees.forEach(e => {
+            const dept = e.department_name || "Unassigned";
+            deptCounts[dept] = (deptCounts[dept] || 0) + 1;
+        });
+        const total = employees.length || 1;
+        document.getElementById("dept-breakdown").innerHTML = Object.entries(deptCounts).map(([dept, count]) => `
+            <div class="dept-row">
+                <div class="d-flex justify-content-between small mb-1">
+                    <span>${dept}</span><span>${count} / ${total}</span>
+                </div>
+                <div class="progress"><div class="progress-bar bg-primary" style="width:${(count/total*100).toFixed(0)}%"></div></div>
+            </div>
+        `).join("");
+
+        const allLeaveRes = await apiRequest("/attendance/leave/all/");
+        const allLeave = await allLeaveRes.json();
+        const today = new Date().toISOString().split('T')[0];
+        const onLeaveToday = allLeave.filter(l => l.status === "APPROVED" && l.start_date <= today && l.end_date >= today);
+        document.getElementById("stat-on-leave").innerText = onLeaveToday.length;
+
+        const pending = allLeave.filter(l => l.status === "PENDING");
+        document.getElementById("stat-pending").innerText = pending.length;
+        document.getElementById("pending-requests-list").innerHTML = pending.length ? pending.map(l => `
+            <div class="request-item">
+                <div>
+                    <strong>${l.employee_name}</strong> <span class="text-muted small">(${l.employee_code})</span><br>
+                    <span class="small text-muted">${l.start_date} to ${l.end_date} — ${l.reason}</span>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-success me-1" onclick="approveLeave(${l.id}, 'APPROVED')">Approve</button>
+                    <button class="btn btn-sm btn-danger" onclick="approveLeave(${l.id}, 'REJECTED')">Reject</button>
+                </div>
+            </div>
+        `).join("") : `<p class="text-muted small">No pending requests.</p>`;
+    }
+
+    async function approveLeave(id, status) {
+        const res = await apiRequest(`/attendance/leave/${id}/approve/`, "PATCH", { status });
+        if (res.ok) { loadAdminOverview(); }
+        else alert("Error updating request");
     }
 
     async function loadEmployees() {
@@ -202,6 +243,7 @@
         const res = await apiRequest("/employees/", "POST", payload);
         if (res.ok) {
             loadEmployees();
+            loadAdminOverview();
             document.getElementById("new_emp_id").value = "";
             document.getElementById("new_emp_doj").value = "";
         } else {
@@ -211,7 +253,6 @@
     }
 
     async function loadReviewsDropdown() {
-        document.getElementById("reviews-section").classList.remove("d-none");
         const res = await apiRequest("/employees/");
         const data = await res.json();
         const select = document.getElementById("review_employee");
@@ -280,7 +321,6 @@
         document.getElementById("leave-table").innerHTML = data.map(l => `
             <tr><td>${l.start_date}</td><td>${l.end_date}</td><td>${l.reason}</td><td>${statusBadge(l.status)}</td></tr>
         `).join("");
-        document.getElementById("stat-leaves").innerText = data.filter(l => l.status === "PENDING").length;
     }
 
     async function createGoal() {
@@ -304,7 +344,6 @@
         document.getElementById("goals-table").innerHTML = data.map(g => `
             <tr><td>${g.title}</td><td>${g.due_date}</td><td>${statusBadge(g.status)}</td></tr>
         `).join("");
-        document.getElementById("stat-goals").innerText = data.filter(g => g.status === "IN_PROGRESS").length;
     }
 
     loadProfile();

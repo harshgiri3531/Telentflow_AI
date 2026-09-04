@@ -61,3 +61,14 @@ class LeaveApprovalView(generics.UpdateAPIView):
             recipient=leave.employee.user,
             message=f"Your leave request ({leave.start_date} to {leave.end_date}) has been {leave.status.lower()}."
         )
+
+class AllLeaveRequestsView(generics.ListAPIView):
+    serializer_class = LeaveRequestSerializer
+    permission_classes = [IsHRorAdmin]
+
+    def get_queryset(self):
+        queryset = LeaveRequest.objects.select_related('employee', 'employee__user').all()
+        status_param = self.request.query_params.get('status')
+        if status_param:
+            queryset = queryset.filter(status=status_param)
+        return queryset.order_by('-created_at')
