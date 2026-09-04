@@ -108,6 +108,30 @@
     </table>
 </div>
 
+<div id="reviews-section" class="section-card d-none">
+    <div class="section-title"><i class="bi bi-star"></i> Performance Reviews (HR/Admin Only)</div>
+    <div class="row">
+        <div class="col-md-4">
+            <select id="review_employee" class="form-select mb-2"></select>
+        </div>
+        <div class="col-md-2">
+            <select id="review_rating" class="form-select mb-2">
+                <option value="5">5 - Excellent</option>
+                <option value="4">4 - Good</option>
+                <option value="3">3 - Average</option>
+                <option value="2">2 - Below Average</option>
+                <option value="1">1 - Poor</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <input id="review_feedback" class="form-control mb-2" placeholder="Feedback">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100" onclick="createReview()">Submit</button>
+        </div>
+    </div>
+</div>
+
 <div class="section-card">
     <div class="section-title"><i class="bi bi-flag"></i> My Goals</div>
     <div class="row">
@@ -119,6 +143,14 @@
     <table class="table custom-table mt-3">
         <thead><tr><th>Title</th><th>Due Date</th><th>Status</th></tr></thead>
         <tbody id="goals-table"></tbody>
+    </table>
+</div>
+
+<div class="section-card">
+    <div class="section-title"><i class="bi bi-star-fill"></i> My Performance Reviews</div>
+    <table class="table custom-table">
+        <thead><tr><th>Rating</th><th>Feedback</th><th>Date</th></tr></thead>
+        <tbody id="reviews-table"></tbody>
     </table>
 </div>
 {% endblock %}
@@ -140,6 +172,7 @@
             document.getElementById("employees-section").classList.remove("d-none");
             loadEmployees();
             loadUsersDropdown();
+            loadReviewsDropdown();
         }
     }
 
@@ -175,6 +208,39 @@
             const err = await res.json();
             alert("Error: " + JSON.stringify(err));
         }
+    }
+
+    async function loadReviewsDropdown() {
+        document.getElementById("reviews-section").classList.remove("d-none");
+        const res = await apiRequest("/employees/");
+        const data = await res.json();
+        const select = document.getElementById("review_employee");
+        select.innerHTML = data.map(e => `<option value="${e.id}">${e.user_detail.username} (${e.employee_id})</option>`).join("");
+    }
+
+    async function createReview() {
+        const payload = {
+            employee: document.getElementById("review_employee").value,
+            rating: document.getElementById("review_rating").value,
+            feedback: document.getElementById("review_feedback").value,
+        };
+        const res = await apiRequest("/performance/reviews/", "POST", payload);
+        if (res.ok) {
+            document.getElementById("review_feedback").value = "";
+            alert("Review submitted!");
+        } else {
+            const err = await res.json();
+            alert("Error: " + JSON.stringify(err));
+        }
+    }
+
+    async function loadMyReviews() {
+        const res = await apiRequest("/performance/my-reviews/");
+        if (!res || !res.ok) return;
+        const data = await res.json();
+        document.getElementById("reviews-table").innerHTML = data.map(r => `
+            <tr><td>${'⭐'.repeat(r.rating)}</td><td>${r.feedback}</td><td>${r.review_date}</td></tr>
+        `).join("");
     }
 
     async function checkIn() {
@@ -244,5 +310,6 @@
     loadProfile();
     loadLeaveRequests();
     loadGoals();
+    loadMyReviews();
 </script>
 {% endblock %}

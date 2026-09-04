@@ -22,3 +22,11 @@ class PerformanceReviewListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(reviewer=self.request.user.employee_profile)
+
+class MyReviewsView(generics.ListAPIView):
+    serializer_class = PerformanceReviewSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return PerformanceReview.objects.filter(employee=self.request.user.employee_profile)
+    
