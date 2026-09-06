@@ -13,4 +13,4 @@ class PerformanceReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = PerformanceReview
         fields = '__all__'
-        read_only_fields = ('reviewer',)
+        read_only_fields = ('reviewer', 'sentiment', 'sentiment_score')

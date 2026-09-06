@@ -138,7 +138,7 @@
 <div id="reviews-section-my" class="section-card">
     <div class="section-title"><i class="bi bi-star-fill"></i> My Performance Reviews</div>
     <table class="table custom-table">
-        <thead><tr><th>Rating</th><th>Feedback</th><th>Date</th></tr></thead>
+        <thead><tr><th>Rating</th><th>Feedback</th><th>Sentiment</th><th>Date</th></tr></thead>
         <tbody id="reviews-table"></tbody>
     </table>
 </div>
@@ -275,12 +275,25 @@
         }
     }
 
+    function sentimentBadge(sentiment) {
+        let cls = "bg-secondary";
+        if (sentiment === "POSITIVE") cls = "bg-success";
+        if (sentiment === "NEGATIVE") cls = "bg-danger";
+        if (sentiment === "NEUTRAL") cls = "bg-warning text-dark";
+        return `<span class="badge ${cls}">${sentiment || 'N/A'}</span>`;
+    }
+
     async function loadMyReviews() {
         const res = await apiRequest("/performance/my-reviews/");
         if (!res || !res.ok) return;
         const data = await res.json();
         document.getElementById("reviews-table").innerHTML = data.map(r => `
-            <tr><td>${'⭐'.repeat(r.rating)}</td><td>${r.feedback}</td><td>${r.review_date}</td></tr>
+            <tr>
+                <td>${'⭐'.repeat(r.rating)}</td>
+                <td>${r.feedback}</td>
+                <td>${sentimentBadge(r.sentiment)}</td>
+                <td>${r.review_date}</td>
+            </tr>
         `).join("");
     }
 
